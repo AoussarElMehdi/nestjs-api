@@ -1,12 +1,12 @@
 version: '3.8'
 services:
-  database:
+  dev-db:
     image: mongo
     ports:
       - 27017:27017
     environment:
-      MONGO_USER: root
-      MONGO_PASSWORD: 
+      MONGO_USER: mehdi
+      MONGO_PASSWORD: mehdi123
       MONGO_DBNAME: nest
     networks:
       - nestapi
