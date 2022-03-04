@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { AuthDto } from './dto';
 import * as argon from 'argon2';
 import { InjectModel } from '@nestjs/mongoose';
@@ -19,15 +19,19 @@ export class AuthService {
       const hash = await argon.hash(dto.password);
       // save the new user in the db
       const newUser = new this.userModel({
+        firstName: dto.firstName || null,
+        lastName: dto.lastName || null,
         email: dto.email,
         password: hash
       });
 
-      const result = await newUser.save();
+      const user = await newUser.save();
 
-      // return the saved user
-      return result;
+      return this.signToken(String(user._id), user.email);
     } catch (error) {
+      if (error.code === 11000) {
+        throw new BadRequestException('email already taken');
+      }
       return error;
     }
   }
