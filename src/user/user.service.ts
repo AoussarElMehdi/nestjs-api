@@ -12,7 +12,7 @@ export class UserService {
     userId: string,
     dto: EditUserDto,
   ) {
-    // find the user by email
+    // find the user by id
     const user = await this.userModel.findOne({ _id: userId });
     // if user does not exist throw exception
     if (!user) throw new NotFoundException('User not found');

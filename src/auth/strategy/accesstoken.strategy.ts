@@ -6,13 +6,13 @@ import { Model } from 'mongoose';
 import { User } from "src/schemas";
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
     constructor(
         @InjectModel('User') private readonly userModel: Model<User>
         ) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secretOrKey: process.env.JWT_SECRET,
+            secretOrKey: process.env.ACCESS_JWT_SECRET,
         })
     }
 
@@ -21,6 +21,9 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         if (!user) {
             throw new UnauthorizedException();
           }
-        return user;
+        return {
+            _id: user._id,
+            email: user.email
+        };
     }
 }

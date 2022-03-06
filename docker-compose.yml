@@ -1,14 +1,21 @@
 version: '3.8'
 services:
-  dev-db:
+  server:
+    image: nest-api:1.0.0
+    container_name: nestapi_server
+    ports:
+      - 3000:3000
+    networks:
+      - nestapi
+    depends_on:
+      - db
+  db:
     image: mongo
+    container_name: nestapi_db
     ports:
       - 27017:27017
-    environment:
-      MONGO_USER: mehdi
-      MONGO_PASSWORD: mehdi123
-      MONGO_DBNAME: nest
     networks:
       - nestapi
 networks:
   nestapi:
+    driver: bridge
